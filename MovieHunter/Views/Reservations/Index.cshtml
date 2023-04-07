@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MovieHunter.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    body{
+        background-image:url('/background1.jpg');
+        background-repeat:no-repeat;
+        background-size:cover;
+        
+    }
+
+    .table{
+        text-align:center;
+        color:white;
+    }
+</style>
+
+
+
+<table class="container table">
+    <thead>
+        <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Movie)
+            </th>
+            <th>
+                Reservation Time
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketNumbers)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="trmiddle">
+            
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Movie.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReservationTime)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.LastName), @Html.DisplayFor(modelItem=>item.Customer.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketNumbers)
+            </td>
+            <td>
+              
+                <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.ReservationId">Edit</a> 
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ReservationId">Cancel</a>
+            </td>
+        </tr>
+}
+    </tbody>
+
+</table>

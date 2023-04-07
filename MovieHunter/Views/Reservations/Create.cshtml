@@ -1,0 +1,130 @@
+﻿@model MovieHunter.Models.Reservation
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    body {
+        background-image: url('/images/kilyan-sockalingum-nW1n9eNHOsc-unsplash.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        color:black;
+    }
+
+    h1 {
+        font-size: 3rem;
+        color: white;
+    }
+
+    .video-container{
+        text-align:center;
+    }
+
+    label, input {
+        font-size: 1.2rem;
+    }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            font-size: 1.2rem;
+        }
+
+            input[type="submit"]:hover {
+                background-color: #0069d9;
+                border-color: #0062cc;
+            }
+
+    .btn {
+        font-size: 1.2rem;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .error {
+        color: #dc3545;
+    }
+</style>
+ 
+<div class="row">
+    <div class="col-md-6">
+        <div class="video-container">
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/AHmCH7iB_IM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="video-container">
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/D3bDpHMIqtM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="video-container">
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/WdZ-BWWQcWQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="video-container">
+            <iframe width="300" height="200" src="https://www.youtube.com/embed/DuWEEKeJLMI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h1 class="text-center">Create Ticket</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="All" class="text-center error"></div>
+                <div class="form-group">
+                <label asp-for="MovieId" class="control-label">Movie title</label>
+                <select asp-for="MovieId" class ="form-control" asp-items="ViewBag.MovieId"></select>
+            </div>
+                <div class="form-group">
+                    <label asp-for="TicketNumbers" class="control-label">Number of tickets</label>
+                    <input asp-for="TicketNumbers" class="form-control" />
+                    <span asp-validation-for="TicketNumbers" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ReservationTime">Time of the Reservation//THIS IT WILL BE MODIFIED</label>
+                    <input asp-for="ReservationTime" class="form-control" />
+                    <span asp-validation-for="ReservationTime" class="text-center error"></span>
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="CustomerId" class="control-label">Email</label>
+                    <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
+                </div>
+               @* <div class="form-group">
+                    <label asp-for="PromoCode"></label>
+                    <input asp-for="PromoCode" class="form-control" />
+                    <span asp-validation-for="PromoCode" class="text-center error"></span>
+                </div>*@
+                <div class="form-group text-center">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary">Pay with Apple Pay</button>
+            <button class="btn btn-primary">Pay with Google Pay</button>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+     
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

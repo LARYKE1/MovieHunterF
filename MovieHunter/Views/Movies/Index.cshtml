@@ -1,0 +1,127 @@
+﻿@model IEnumerable<MovieHunter.Models.Movies>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<section class="search-bar">
+    <form class="end" method="get" asp-action="Index">
+        <input class="start" type="text" name="name" value="@ViewData["MovieName"]" placeholder="search here" />
+        <button type="submit"><i class="fa fa-search"></i></button>
+       
+    </form>
+
+    
+</section>
+
+<section class="rem movies">
+    <h2 class="heading">Coming SOON</h2>
+    <div class="movies-container">
+        @foreach(var item in Model.Where(r=>r.ReleaseDate<DateTime.Now))
+        {
+            <div class="box">
+                <div class="box-img">
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId">
+                    <img src="@item.PictureUrl"/>
+                    </a>
+                </div>
+                <h3>@item.Title</h3>
+                <span>@item.Duration min | @item.Genre</span>
+            </div>
+        }
+    </div>
+</section>
+
+<section>
+    <h2 class="heading">Now in Cinema</h2>
+    <div class="movies-container">
+        @foreach(var item in Model.Where(r => r.ReleaseDate < DateTime.Now))
+        {
+            <div class="box">
+                <div class="box-img">
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId">
+                        <img src="@item.PictureUrl" />
+                    </a>
+                </div>
+                <h3>@item.Title</h3>
+                <span>@item.Duration min | @item.Genre</span>
+            </div>
+        }
+    </div>
+</section>
+
+
+<section class="newsletter">
+    <h2>
+        Subscribe to Get <br />Newsletter
+    </h2>
+
+    <form>
+        <input type="email" placeholder="Enter Email" required"" />
+        <input type="submit" value="Subscribe" class="btn" />
+    </form>
+</section>
+
+
+
+
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PictureUrl)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PictureUrl)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MovieId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MovieId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@

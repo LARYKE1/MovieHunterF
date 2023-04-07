@@ -1,0 +1,46 @@
+﻿@model MovieHunter.Models.Reservation
+
+@{
+    ViewData["Title"] = "Delete";
+}
+<div class="container">
+    <h3>Are you sure you want to cancel this?</h3>
+    <div>
+        <h4>Reservation</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                Number of tickets
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TicketNumbers)
+            </dd>
+            @* <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ReservationTime)
+            </dt>
+            <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ReservationTime)
+            </dd>
+            *@
+
+            <dt class="col-sm-2">
+                Reservation time
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ReservationTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Movie)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Movie.Title)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="ReservationId" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a class="btn btn-info" asp-action="Index">Return to reservations</a>
+        </form>
+    </div>
+</div>
