@@ -10,6 +10,7 @@ using MovieHunter.Models;
 
 namespace MovieHunter.Controllers
 {
+    
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +21,8 @@ namespace MovieHunter.Controllers
         }
 
         // GET: Movies
+        [Route("")]
+        [Route("[controller]/[action]")]
         public async Task<IActionResult> Index(string? name)
         {
             ViewData["MovieName"] = name;
@@ -39,6 +42,7 @@ namespace MovieHunter.Controllers
                         Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
         }
 
+        [Route("[controller]/[action]/{id}")]
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -23,7 +23,7 @@ namespace MovieHunter.Controllers
         }
 
 
-      
+        [Route("[controller]/[action]/{id?}")]
         // GET: Reservations
         public async Task<IActionResult> Index(int? id)
         {
@@ -50,7 +50,7 @@ namespace MovieHunter.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        
+        [Route("[controller]/[action]/{id}")]
         // GET: Reservations/Create
         public async Task<IActionResult> Create(int? id)
         {
@@ -74,7 +74,7 @@ namespace MovieHunter.Controllers
             }
             
         }
-
+        [Route("[controller]/[action]/{id}")]
         // POST: Reservations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -94,7 +94,7 @@ namespace MovieHunter.Controllers
             ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
             return View(reservation);
         }
-
+        [Route("[controller]/[action]/{id?}")]
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -126,7 +126,7 @@ namespace MovieHunter.Controllers
                 return RedirectToAction("Index", "Movies");
             }
         }
-
+        [Route("[controller]/[action]/{id?}")]
         // POST: Reservations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -164,7 +164,7 @@ namespace MovieHunter.Controllers
             ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
             return View(reservation);
         }
-
+        [Route("[controller]/[action]/{id}")]
         // GET: Reservations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -184,7 +184,7 @@ namespace MovieHunter.Controllers
 
             return View(reservation);
         }
-
+        [Route("[controller]/[action]/{id}")]
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
