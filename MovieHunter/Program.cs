@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieHunter.Data;
 using Microsoft.Extensions.Azure;
+using MovieHunter.Infrastructure;
+using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +13,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+
+
+
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
+
 
 
 builder.Services.AddRazorPages();
@@ -27,7 +33,10 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddQueueServiceClient(builder.Configuration["ConnectionFirstProject:queue"], preferMsi: true);
 });
 
+
 var app = builder.Build();
+
+
 
 
 
@@ -46,6 +55,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+
 app.UseSession();
 
 
@@ -54,11 +65,32 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+//app.MapControllers();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Movies}/{action=Index}/{id?}");
+
+
+
+app.MapControllerRoute(
+    name: "Reservation",
+    pattern: "MyReservation",
+    defaults: new {controller="Reservations", action="Index"}
+    );
+
+app.MapControllerRoute(
+        name: "Movie",
+        pattern: "{title}",
+        defaults: new { controller = "Movies", action = "Details" });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Movies}/{action=Index}/{id?}"
+    
+);
+
+
+
+
+
 app.MapRazorPages();
 
 app.Run();

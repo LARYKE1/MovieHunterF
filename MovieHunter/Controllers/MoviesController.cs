@@ -21,8 +21,7 @@ namespace MovieHunter.Controllers
         }
 
         // GET: Movies
-        [Route("")]
-        [Route("[controller]/[action]")]
+        
         public async Task<IActionResult> Index(string? name)
         {
             ViewData["MovieName"] = name;
@@ -42,7 +41,7 @@ namespace MovieHunter.Controllers
                         Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
         }
 
-        [Route("[controller]/[action]/{id}")]
+        
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,26 +52,22 @@ namespace MovieHunter.Controllers
 
             var movies = await _context.Movies
                 .FirstOrDefaultAsync(m => m.MovieId == id);
-            var countN = from r in _context.Reservations
-                         select r;
-
-            var yourRes = from r in _context.Movies
-                          where r.MovieId == id
-                          select r.ReleaseDate;
 
 
 
 
 
-
-            TempData["count"] = countN.Count();
             if (movies == null)
             {
                 return NotFound();
             }
 
+           
+
             return View(movies);
         }
 
+
+        
     }
 }

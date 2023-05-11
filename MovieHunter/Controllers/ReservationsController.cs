@@ -23,7 +23,7 @@ namespace MovieHunter.Controllers
         }
 
 
-        [Route("[controller]/[action]/{id?}")]
+        
         // GET: Reservations
         public async Task<IActionResult> Index(int? id)
         {
@@ -50,7 +50,6 @@ namespace MovieHunter.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        [Route("[controller]/[action]/{id}")]
         // GET: Reservations/Create
         public async Task<IActionResult> Create(int? id)
         {

@@ -19,11 +19,11 @@
 <section class="rem movies">
     <h2 class="heading">Coming SOON</h2>
     <div class="movies-container">
-        @foreach(var item in Model.Where(r=>r.ReleaseDate<DateTime.Now))
+        @foreach (var item in Model.Where(r => r.ReleaseDate > new DateTime(2023, 4, 30)))
         {
             <div class="box">
                 <div class="box-img">
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId">
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId" asp-route-title="@item.Title.Replace(" ","-")">
                     <img src="@item.PictureUrl"/>
                     </a>
                 </div>
@@ -37,11 +37,11 @@
 <section>
     <h2 class="heading">Now in Cinema</h2>
     <div class="movies-container">
-        @foreach(var item in Model.Where(r => r.ReleaseDate < DateTime.Now))
+        @foreach (var item in Model.Where(r => r.ReleaseDate < new DateTime(2023, 4, 30)))
         {
             <div class="box">
                 <div class="box-img">
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId">
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId" asp-route-title="@item.Title.Replace(" ","-")">
                         <img src="@item.PictureUrl" />
                     </a>
                 </div>
