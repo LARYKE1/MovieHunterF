@@ -30,9 +30,7 @@ namespace MovieHunter.Models
         [InverseProperty(nameof(Reservation.Movie))]
         public virtual ICollection<Reservation> Reservations { get; set; }
 
-        //[InverseProperty(nameof(AvailableDate.Movie123))]
-        //public virtual ICollection<AvailableDate> AvailableDates { get; set; }
-
+        public virtual ICollection<AvailableDate> AvailableDate { get; set; }
 
     }
 }

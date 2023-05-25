@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieHunter.Data;
 
@@ -11,9 +12,11 @@ using MovieHunter.Data;
 namespace MovieHunter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230511094241_DataAvailable1")]
+    partial class DataAvailable1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -378,10 +381,10 @@ namespace MovieHunter.Migrations
             modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
                 {
                     b.HasOne("MovieHunter.Models.Movies", "Movie")
-                        .WithMany("AvailableDate")
+                        .WithMany()
                         .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Available_Movie");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
                 });
@@ -421,8 +424,6 @@ namespace MovieHunter.Migrations
 
             modelBuilder.Entity("MovieHunter.Models.Movies", b =>
                 {
-                    b.Navigation("AvailableDate");
-
                     b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618

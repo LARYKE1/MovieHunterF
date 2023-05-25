@@ -14,15 +14,11 @@ namespace MovieHunter.Models
         public DateTime? Date { get; set; }
 
 
+        [ForeignKey(nameof(MovieId))]
+        public virtual Movies Movie { get; set; }
 
-        //[ForeignKey(nameof(MovieId))]
-        //[InverseProperty("AvailableDates")]
-        //public virtual Movies Movie123 { get; set; }
-
-
-
-        //[InverseProperty(nameof(Reservation.Dates))]
-        //public virtual ICollection<Reservation> DatesReservation { get; set; }
+        [InverseProperty("Date")]
+        public virtual ICollection<Reservation> Reservations { get; set; }
 
     }
 }

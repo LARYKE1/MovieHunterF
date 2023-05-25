@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieHunter.Data;
 using Microsoft.Extensions.Azure;
-using MovieHunter.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +74,11 @@ app.MapControllerRoute(
     pattern: "MyReservation",
     defaults: new {controller="Reservations", action="Index"}
     );
+
+//app.MapControllerRoute(
+//    name: "ReservationCreate",
+//    pattern: "MakeAReservationToday",
+//    defaults: new { controller = "Reservations", action = "Create" }); 
 
 app.MapControllerRoute(
         name: "Movie",

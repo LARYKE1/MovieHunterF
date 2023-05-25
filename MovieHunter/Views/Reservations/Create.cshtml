@@ -49,31 +49,9 @@
         color: #dc3545;
     }
 </style>
- 
-<div class="row">
-    <div class="col-md-6">
-        <div class="video-container">
-            <iframe width="300" height="200" src="https://www.youtube.com/embed/AHmCH7iB_IM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="video-container">
-            <iframe width="300" height="200" src="https://www.youtube.com/embed/D3bDpHMIqtM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="video-container">
-            <iframe width="300" height="200" src="https://www.youtube.com/embed/WdZ-BWWQcWQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="video-container">
-            <iframe width="300" height="200" src="https://www.youtube.com/embed/DuWEEKeJLMI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-</div>
+
+@*@await Html.PartialAsync("ReservationV/_PartialViewVideos") *@
+
 <div class="container my-5">
     <div class="card">
         <div class="card-header bg-primary">
@@ -91,11 +69,11 @@
                     <input asp-for="TicketNumbers" class="form-control" />
                     <span asp-validation-for="TicketNumbers" class="text-danger"></span>
                 </div>
+          
 
                 <div class="form-group">
-                    <label asp-for="ReservationTime">Time of the Reservation//THIS IT WILL BE MODIFIED</label>
-                    <input asp-for="ReservationTime" class="form-control" />
-                    <span asp-validation-for="ReservationTime" class="text-center error"></span>
+                    <label asp-for="Date">Time of the Reservation//THIS IT WILL BE MODIFIED</label>
+                    <select asp-for="Date" class="form-control" asp-items="ViewBag.AvailableDateId"></select>
                 </div>
 
 
@@ -103,11 +81,7 @@
                     <label asp-for="CustomerId" class="control-label">Email</label>
                     <select asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
                 </div>
-               @* <div class="form-group">
-                    <label asp-for="PromoCode"></label>
-                    <input asp-for="PromoCode" class="form-control" />
-                    <span asp-validation-for="PromoCode" class="text-center error"></span>
-                </div>*@
+               
                 <div class="form-group text-center">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
