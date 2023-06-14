@@ -12,8 +12,8 @@ using MovieHunter.Data;
 namespace MovieHunter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230511093737_DataAvailable")]
-    partial class DataAvailable
+    [Migration("20230612035153_Nou")]
+    partial class Nou
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,27 +235,6 @@ namespace MovieHunter.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
-                {
-                    b.Property<int>("DateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DateId"));
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DateId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("AvailableDate");
-                });
-
             modelBuilder.Entity("MovieHunter.Models.Movies", b =>
                 {
                     b.Property<int>("MovieId")
@@ -298,8 +277,7 @@ namespace MovieHunter.Migrations
                 {
                     b.Property<int>("ReservationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ReservationID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
 
@@ -307,14 +285,8 @@ namespace MovieHunter.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("DateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("ReservationTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<byte>("TicketNumbers")
                         .HasColumnType("tinyint");
@@ -322,8 +294,6 @@ namespace MovieHunter.Migrations
                     b.HasKey("ReservationId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("DateId");
 
                     b.HasIndex("MovieId");
 
@@ -381,46 +351,24 @@ namespace MovieHunter.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
-                {
-                    b.HasOne("MovieHunter.Models.Movies", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
-                });
-
             modelBuilder.Entity("MovieHunter.Models.Reservation", b =>
                 {
                     b.HasOne("MovieHunter.Data.ApplicationUser", "Customer")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("MovieHunter.Models.AvailableDate", "Date")
-                        .WithMany("Reservations")
-                        .HasForeignKey("DateId");
-
                     b.HasOne("MovieHunter.Models.Movies", "Movie")
                         .WithMany("Reservations")
                         .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Reservation_Movie_1");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Date");
 
                     b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("MovieHunter.Data.ApplicationUser", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
                 {
                     b.Navigation("Reservations");
                 });

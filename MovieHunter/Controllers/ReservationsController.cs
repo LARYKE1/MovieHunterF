@@ -43,7 +43,7 @@ namespace MovieHunter.Controllers
 
             var applicationDbContext = _context.Reservations.Include(r => r.Customer)
                                                             .Include(r => r.Movie)
-                                                            .Include(r=>r.Date)
+                                                            .Include(r=>r.AvailableDate)
                                                             .Where(r => r.CustomerId.Equals(idUser))
                                                             .AsNoTracking();
                                                             
@@ -64,9 +64,9 @@ namespace MovieHunter.Controllers
                 var idUser = userId.Id;
 
 
-                ViewData["AvailableDateId"] = new SelectList(_context.AvailableDate.Where(s=>s.MovieId==id), "DateId", "Date");
                 ViewData["CustomerId"] = new SelectList(_context.Users.Where(r => r.Id.Equals(idUser)), "Id", "Email");
                 ViewData["MovieId"] = new SelectList(_context.Movies.Where(s => s.MovieId == id), "MovieId", "Title");
+                ViewData["DateId"] = new SelectList(_context.AvailableDate.Where(s => s.MovieId == id), "DateId", "Date");
                 return View();
             }
             else
@@ -82,7 +82,7 @@ namespace MovieHunter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? id, [Bind("ReservationId,TicketNumbers,MovieId,CustomerId,AvailableDateId")] Reservation reservation)
+        public async Task<IActionResult> Create(int? id, [Bind("ReservationId,TicketNumbers,MovieId,CustomerId,DateId")] Reservation reservation)
         {
 
             if (ModelState.IsValid)
@@ -94,15 +94,14 @@ namespace MovieHunter.Controllers
 
                 _context.Add(reservation);
 
-
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Email", reservation.CustomerId);
             ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
-            ViewData["AvailableDateId"] = new SelectList(_context.AvailableDate, "DateId", "Date", reservation.Date);
-            
+            ViewData["DateId"] = new SelectList(_context.AvailableDate, "DateId", "Date", reservation.DateId);
+
+
             return View(reservation);
         }
         [Route("[controller]/[action]/{id?}")]

@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieHunter.Data;
-using MovieHunter.Models;
 
 namespace MovieHunter.Controllers
 {
-    
     public class MoviesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,28 +13,40 @@ namespace MovieHunter.Controllers
             _context = context;
         }
 
-        // GET: Movies
-        
-        public async Task<IActionResult> Index(string? name)
+        [HttpGet]
+        public async Task<IActionResult> Index(string? search)
         {
-            ViewData["MovieName"] = name;
-            var movies = from m in _context.Movies
-                         select m;
-
-            if (!string.IsNullOrEmpty(name))
+            //Check if the Movies tables has any data
+            if (_context.Movies.Any())
             {
-                movies = movies.Where(r => r.Title.Contains(name) || r.Title.StartsWith(name));
+                //LINQ query to retrieve all movies from Movies
+                var movies = from m in _context.Movies
+                             select m;
 
-                return View(await movies.AsNoTracking().ToListAsync());
+                //Check if the parameter is null
+                if (!string.IsNullOrEmpty(search))
+                {
+                    //Trim method to remove any accidentally extra spaces
+                    search = search.Trim();
+
+                    //LINQ query to retrieve the movie that has the searching index in it
+                    movies = from m in _context.Movies
+                             where m.Title.Contains(search)
+                             select m;
+
+                    //AsNoTracking is used for performance, because there is no changed made on this view
+                    return View(await movies.AsNoTracking().ToListAsync());
+                }
+
+                return View(await _context.Movies.AsNoTracking().ToListAsync());
             }
-
-
-            return _context.Movies != null ?
-                        View(await _context.Movies.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Movies'  is null.");
+            else
+            {
+                return NotFound();
+            }
         }
 
-        
+
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,21 +58,12 @@ namespace MovieHunter.Controllers
             var movies = await _context.Movies
                 .FirstOrDefaultAsync(m => m.MovieId == id);
 
-
-
-
-
             if (movies == null)
             {
                 return NotFound();
             }
 
-           
-
             return View(movies);
         }
-
-
-        
     }
 }

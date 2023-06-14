@@ -12,16 +12,14 @@ namespace MovieHunter.Models
     public class Reservation
     {
         [Key]
-        [Column("ReservationID")]
         public int ReservationId { get; set; }
         public byte TicketNumbers { get; set; }
 
         public int MovieId { get; set; }
         [StringLength(450)]
         public string CustomerId { get; set; }
-
         
-
+        public int DateId { get; set; }
 
 
         [ForeignKey(nameof(CustomerId))]
@@ -30,9 +28,10 @@ namespace MovieHunter.Models
         [InverseProperty("Reservations")]
         public virtual Movies Movie { get; set; }
 
-
-
-        public virtual AvailableDate Date { get; set; }
+        [ForeignKey(nameof(DateId))]
+        public AvailableDate AvailableDate { get; set; }
+        
+        
         
 
     }

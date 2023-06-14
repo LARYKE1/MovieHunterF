@@ -14,36 +14,25 @@ namespace MovieHunter.Data
 
         public virtual DbSet<Movies> Movies { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
-        public virtual DbSet<AvailableDate> AvailableDate { get; set; } 
+        public virtual DbSet<AvailableDate> AvailableDate { get; set; }
 
         protected override void OnModelCreating (ModelBuilder builder)
         {
-            builder.Entity<Movies>(entity =>
-            {
-                entity.HasKey(d => d.MovieId);
-             });
-
-            builder.Entity<Reservation>(entity =>
-            {
-                entity.HasOne(d => d.Movie)
-                .WithMany(p => p.Reservations)
-                .HasForeignKey(p => p.MovieId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Reservation_Movie_1");
-            });
-
-
-            builder.Entity<AvailableDate>(entity =>
-            {
-                entity.HasKey(d => d.DateId);
-                entity.HasOne(d => d.Movie)
-                        .WithMany(a => a.AvailableDate)
-                        .HasForeignKey(d => d.MovieId)
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_Available_Movie");
-            });
-
+           
             base.OnModelCreating(builder);
+
+            builder.Entity<Movies>()
+                .HasMany(r => r.Reservations)
+                .WithOne(m => m.Movie)
+                .HasForeignKey(f => f.MovieId)
+                .IsRequired();
+
+            builder.Entity<Movies>()
+                .HasMany(a => a.AvailableDate)
+                .WithOne(r => r.Movie)
+                .HasForeignKey(f => f.MovieId);
+
+
         }
     }
 }

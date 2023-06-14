@@ -47,9 +47,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Movie.Title)
             </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.ReservationTime)
-            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.AvailableDate.Date)
+            </td>
             
             <td>
                 @Html.DisplayFor(modelItem => item.Customer.LastName), @Html.DisplayFor(modelItem=>item.Customer.FirstName)

@@ -240,7 +240,7 @@ namespace MovieHunter.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DateId"));
 
-                    b.Property<DateTime?>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("MovieId")
@@ -295,8 +295,7 @@ namespace MovieHunter.Migrations
                 {
                     b.Property<int>("ReservationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ReservationID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
 
@@ -304,7 +303,7 @@ namespace MovieHunter.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("DateId")
+                    b.Property<int>("DateId")
                         .HasColumnType("int");
 
                     b.Property<int>("MovieId")
@@ -380,8 +379,8 @@ namespace MovieHunter.Migrations
                     b.HasOne("MovieHunter.Models.Movies", "Movie")
                         .WithMany("AvailableDate")
                         .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Available_Movie");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
                 });
@@ -392,19 +391,21 @@ namespace MovieHunter.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("MovieHunter.Models.AvailableDate", "Date")
+                    b.HasOne("MovieHunter.Models.AvailableDate", "AvailableDate")
                         .WithMany("Reservations")
-                        .HasForeignKey("DateId");
+                        .HasForeignKey("DateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MovieHunter.Models.Movies", "Movie")
                         .WithMany("Reservations")
                         .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Reservation_Movie_1");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AvailableDate");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Date");
 
                     b.Navigation("Movie");
                 });

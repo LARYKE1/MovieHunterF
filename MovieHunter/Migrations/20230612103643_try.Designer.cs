@@ -12,15 +12,15 @@ using MovieHunter.Data;
 namespace MovieHunter.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230319043848_Final")]
-    partial class Final
+    [Migration("20230612103643_try")]
+    partial class @try
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -235,6 +235,27 @@ namespace MovieHunter.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
+                {
+                    b.Property<int>("DateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DateId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DateId");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("AvailableDate");
+                });
+
             modelBuilder.Entity("MovieHunter.Models.Movies", b =>
                 {
                     b.Property<int>("MovieId")
@@ -277,8 +298,7 @@ namespace MovieHunter.Migrations
                 {
                     b.Property<int>("ReservationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ReservationID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
 
@@ -286,11 +306,11 @@ namespace MovieHunter.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("MovieId")
+                    b.Property<int>("DateId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReservationTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
 
                     b.Property<byte>("TicketNumbers")
                         .HasColumnType("tinyint");
@@ -298,6 +318,8 @@ namespace MovieHunter.Migrations
                     b.HasKey("ReservationId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("DateId");
 
                     b.HasIndex("MovieId");
 
@@ -355,17 +377,36 @@ namespace MovieHunter.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
+                {
+                    b.HasOne("MovieHunter.Models.Movies", "Movie")
+                        .WithMany("AvailableDate")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+                });
+
             modelBuilder.Entity("MovieHunter.Models.Reservation", b =>
                 {
                     b.HasOne("MovieHunter.Data.ApplicationUser", "Customer")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId");
 
+                    b.HasOne("MovieHunter.Models.AvailableDate", "AvailableDate")
+                        .WithMany("Reservations")
+                        .HasForeignKey("DateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MovieHunter.Models.Movies", "Movie")
                         .WithMany("Reservations")
                         .HasForeignKey("MovieId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Reservation_Movie_1");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AvailableDate");
 
                     b.Navigation("Customer");
 
@@ -377,8 +418,15 @@ namespace MovieHunter.Migrations
                     b.Navigation("Reservations");
                 });
 
+            modelBuilder.Entity("MovieHunter.Models.AvailableDate", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("MovieHunter.Models.Movies", b =>
                 {
+                    b.Navigation("AvailableDate");
+
                     b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
