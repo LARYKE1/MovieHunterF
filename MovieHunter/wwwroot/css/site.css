@@ -239,7 +239,18 @@ ul {
     cursor: pointer;
 }
 
+/*New June*/
+.btnGrey {
+    place-content:center;
+    width:80px;
+    padding-inline: 1.5rem;
+    background-color: #80808091;
+    border-radius: 0.5rem;
+}
 
+.navpadding{
+    padding-right:5px;
+}
 
 
 

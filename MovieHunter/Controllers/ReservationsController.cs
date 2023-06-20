@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,76 +18,62 @@ namespace MovieHunter.Controllers
             _userManager = userManager;
         }
 
-
-        
-        // GET: Reservations
+        [HttpGet]
+        [Route("MyReservation")]
         public async Task<IActionResult> Index(int? id)
         {
+            //get the current authenticated user and store inside userId
             var userId = await _userManager.GetUserAsync(User);
-            var idUser = " ";
 
-            bool val1 = User.Identity.IsAuthenticated;
-
-            if (val1==true)
+            //check if a user is authenticated
+            if (User.Identity.IsAuthenticated)
             {
-                idUser = userId.Id;
+                //store the reservation information of userId inside applicationdbcontext and then return as list)
+                var applicationDbContext = _context.Reservations.Include(r => r.Customer)
+                                                            .Include(r => r.Movie)
+                                                            .Include(r => r.AvailableDate)
+                                                            .Where(r => r.CustomerId.Equals(userId.Id))
+                                                            .AsNoTracking();
+
+                return View(await applicationDbContext.ToListAsync());
             }
             else
             {
-                return RedirectToAction("Index","Movies");
+                return RedirectToAction("Index", "MovieApi");
             }
-
-            var applicationDbContext = _context.Reservations.Include(r => r.Customer)
-                                                            .Include(r => r.Movie)
-                                                            .Include(r=>r.AvailableDate)
-                                                            .Where(r => r.CustomerId.Equals(idUser))
-                                                            .AsNoTracking();
-                                                            
-
-            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Reservations/Create
+        //Shows the form to create the reservation
+        [HttpGet]
         public async Task<IActionResult> Create(int? id)
         {
-            bool val1 = User.Identity.IsAuthenticated;
-
-           
-
-            if (val1.Equals(true))
+            //Same concept as before, check if the user is authenticated and then store inside userId
+            if (User.Identity.IsAuthenticated)
             {
                 var userId = await _userManager.GetUserAsync(User);
-                var idUser = userId.Id;
 
-
-                ViewData["CustomerId"] = new SelectList(_context.Users.Where(r => r.Id.Equals(idUser)), "Id", "Email");
+                //get the data as select where r equals current user, to get that user reservation
+                ViewData["CustomerId"] = new SelectList(_context.Users.Where(r => r.Id.Equals(userId.Id)), "Id", "Email");
+                //select list to show only the movie you selected from first page
                 ViewData["MovieId"] = new SelectList(_context.Movies.Where(s => s.MovieId == id), "MovieId", "Title");
+                //select list to show the data for the movie selected.
                 ViewData["DateId"] = new SelectList(_context.AvailableDate.Where(s => s.MovieId == id), "DateId", "Date");
                 return View();
             }
             else
             {
-
                 return RedirectToAction("Index", "Movies");
             }
-            
         }
+
         [Route("[controller]/[action]/{id}")]
-        // POST: Reservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? id, [Bind("ReservationId,TicketNumbers,MovieId,CustomerId,DateId")] Reservation reservation)
+        public async Task<IActionResult> Create(int? id, [Bind("TicketNumbers,MovieId,CustomerId,DateId")] Reservation reservation)
         {
-
             if (ModelState.IsValid)
             {
-
-                //decimal priceTicket = _context.Movies.Find(reservation.MovieId).PricePerTicket;
-
-                //reservation.PriceTotal = priceTicket* reservation.TicketNumbers;
-
+                //save the new reservation if the model validation is correct
                 _context.Add(reservation);
 
                 await _context.SaveChangesAsync();
@@ -101,122 +83,70 @@ namespace MovieHunter.Controllers
             ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
             ViewData["DateId"] = new SelectList(_context.AvailableDate, "DateId", "Date", reservation.DateId);
 
-
             return View(reservation);
         }
-        [Route("[controller]/[action]/{id?}")]
-        // GET: Reservations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            bool val1 = User.Identity.IsAuthenticated;
 
-
-
-            if (val1.Equals(true))
-            {
-                var userId = await _userManager.GetUserAsync(User);
-                var idUser = userId.Id;
-
-                if (id == null || _context.Reservations == null)
-                {
-                    return NotFound();
-                }
-
-                var reservation = await _context.Reservations.FindAsync(id);
-                if (reservation == null)
-                {
-                    return NotFound();
-                }
-                ViewData["CustomerId"] = new SelectList(_context.Users.Where(r=>r.Id.Equals(idUser)), "Id", "Email", reservation.CustomerId);
-                ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
-                return View(reservation);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Movies");
-            }
-        }
-        [Route("[controller]/[action]/{id?}")]
-        // POST: Reservations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReservationId,TicketNumbers,ReservationTime,PriceTotal,MovieId,CustomerId")] Reservation reservation)
-        {
-
-            if (id != reservation.ReservationId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(reservation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReservationExists(reservation.ReservationId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "Id", reservation.CustomerId);
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", reservation.MovieId);
-            return View(reservation);
-        }
         [Route("[controller]/[action]/{id}")]
-        // GET: Reservations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null || _context.Reservations == null)
             {
                 return NotFound();
             }
-
+            //include all tables and get reservation that has the reservationid equals id
             var reservation = await _context.Reservations
                 .Include(r => r.Customer)
                 .Include(r => r.Movie)
+                .Include(r => r.AvailableDate)
                 .FirstOrDefaultAsync(m => m.ReservationId == id);
+
             if (reservation == null)
             {
                 return NotFound();
             }
-
-            return View(reservation);
-        }
-        [Route("[controller]/[action]/{id}")]
-        // POST: Reservations/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Reservations == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Reservations'  is null.");
-            }
-            var reservation = await _context.Reservations.FindAsync(id);
-            if (reservation != null)
-            {
-                _context.Reservations.Remove(reservation);
-            }
-            
+            //remove, [httpdelete] cause me some errors
+            _context.Reservations.Remove(reservation);
+            //save the chances
             await _context.SaveChangesAsync();
+
+            //redirect to index page of reservation table
             return RedirectToAction(nameof(Index));
+        }
+
+        //Pedram
+        [HttpGet]
+        public IActionResult Preview(int? movieId, int? ticketNumbers, int? dateId, string customerId)
+        {
+            if (movieId == null || ticketNumbers == null || dateId == null || string.IsNullOrEmpty(customerId))
+            {
+                return NotFound();
+            }
+
+            // Retrieve the necessary data from the database
+            var movie = _context.Movies.Find(movieId);
+            var customer = _context.Users.Find(customerId);
+            var date = _context.AvailableDate.Find(dateId);
+
+            if (movie == null || customer == null || date == null)
+            {
+                return NotFound();
+            }
+
+            // Create a view model to pass the data to the preview view
+            var previewViewModel = new Reservation
+            {
+                Movie = movie,
+                TicketNumbers = (byte)ticketNumbers.Value,
+                AvailableDate = date,
+                Customer = customer
+            };
+
+            return View(previewViewModel);
         }
 
         private bool ReservationExists(int id)
         {
-          return (_context.Reservations?.Any(e => e.ReservationId == id)).GetValueOrDefault();
+            return (_context.Reservations?.Any(e => e.ReservationId == id)).GetValueOrDefault();
         }
     }
 }

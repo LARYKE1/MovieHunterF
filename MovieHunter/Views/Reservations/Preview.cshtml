@@ -1,0 +1,349 @@
+﻿@model MovieHunter.Models.Reservation
+
+@{
+    ViewData["Title"] = "Preview";
+}
+
+<h1>Reservation Preview</h1>
+
+<style>
+     .modal-content {
+        background-color: #fff;
+        color: #000;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        width: 300px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+    }
+
+        .modal-close:hover {
+            color: red;
+        }
+ 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #000080;
+    }
+
+    .button-container {
+        margin-top: 20px;
+    }
+
+    .btn-group-vertical > .btn:not(:first-child),
+    .btn-group-vertical > .btn-group:not(:first-child) {
+        margin-top: 0;
+    }
+</style>
+
+<table>
+    <tr>
+        <th>Movie Title</th>
+        <th>Ticket Number</th>
+        <th>Date</th>
+        <th>Email</th>
+    </tr>
+    <tr>
+        <td>@Model.Movie.Title</td>
+        <td>@Model.TicketNumbers</td>
+        <td>@Model.AvailableDate.Date</td>
+        <td>@Model.Customer.Email</td>
+    </tr>
+</table>
+ 
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Seat Selection</title>
+    <style>
+        .cinema-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .screen {
+            width: 100%;
+            height: 10px;
+            background-color: #000;
+            margin-bottom: 20px;
+        }
+
+        .seats-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .seat {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background-color: #ddd;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .seat-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: #333;
+        }
+
+        .seat.selected {
+            background-color: #ffc107;
+        }
+
+        .seat.occupied {
+            background-color: #dc3545;
+            cursor: not-allowed;
+        }
+
+        .seat.unavailable {
+            visibility: hidden;
+        }
+
+        .selected-seats {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .total-price {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cinema Seat Selection</h1>
+
+    <div class="cinema-container">
+        <div class="screen"></div>
+
+        <div class="seats-container">
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+            <div class="seat">
+                <span class="seat-label">1</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">2</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">3</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">4</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">5</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">6</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">7</span>
+            </div>
+            <div class="seat unavailable"></div>
+            <div class="seat unavailable"></div>
+
+            <div class="seat">
+                <span class="seat-label">8</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">9</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">10</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">11</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">12</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">13</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">14</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">15</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">16</span>
+            </div>
+            <div class="seat">
+                <span class="seat-label">17</span>
+            </div>
+
+            <!-- Add more seats as needed -->
+
+        </div>
+
+        <p class="selected-seats">Selected Seats: <span id="count">0</span></p>
+        <p class="total-price">Total Price: $<span id="total">0</span></p>
+    </div>
+
+    <script>
+        const seats = document.querySelectorAll('.seat');
+        const countElement = document.getElementById('count');
+        const totalElement = document.getElementById('total');
+
+        let selectedSeats = 0;
+        let totalPrice = 0;
+
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                if (seat.classList.contains('occupied') || seat.classList.contains('unavailable')) {
+                    alert('This seat is not available!');
+                } else {
+                    seat.classList.toggle('selected');
+                    if (seat.classList.contains('selected')) {
+                        selectedSeats++;
+                        totalPrice += calculatePrice(selectedSeats);
+                    } else {
+                        selectedSeats--;
+                        totalPrice -= calculatePrice(selectedSeats + 1);
+                    }
+                    countElement.textContent = selectedSeats;
+                    totalElement.textContent = totalPrice.toFixed(2);
+                }
+            });
+        });
+
+        function calculatePrice(selectedSeats) {
+            const basePrice = 10; // Base price per seat
+            const additionalPrice = 5; // Additional price for each extra seat
+            return   + additionalPrice ;
+        }
+    </script>
+</body>
+</html>
+
+ 
+
+<section style="background-color: #f9c9aa;">
+    <div class="container py-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-9 col-lg-7 col-xl-5">
+                <div class="card">
+                    <img src="@Model.Movie.PictureUrl" class="card-img-top" alt="@Model.Movie.Title" />
+
+                    <div class="card-body">
+                        <div class="card-title d-flex justify-content-between mb-0">
+                            <p class="text-muted mb-0">$@Model.Movie.PricePerTicket</p>
+
+                            <p class="text-muted mb-0">@Model.Movie.Title</p>
+                            <p class="mb-0">$760</p>
+                        </div>
+                    </div>
+                    <div class="rounded-bottom" style="background-color: #eee;">
+                        <div class="card-body">
+                            <p class="mb-4">Your payment details</p>
+
+                            <div class="form-outline mb-3">
+                                <input type="text" id="formControlLgXM8" class="form-control"
+                                       placeholder="1234 5678 1234 5678" />
+                                <label class="form-label" for="formControlLgXM8">Card Number</label>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="form-outline">
+                                        <input type="password" id="formControlLgExpk8" class="form-control"
+                                               placeholder="MM/YYYY" />
+                                        <label class="form-label" for="formControlLgExpk8">Expire</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-outline">
+                                        <input type="password" id="formControlLgcvv8" class="form-control" placeholder="Cvv" />
+                                        <label class="form-label" for="formControlLgcvv8">Cvv</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-info btn-block" id="order-btn">Order now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="order-modal">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h2>Order Details</h2>
+        <p>Movie: <span id="movie-title">@Model.Movie.Title</span></p>
+        <p>Selected Seats: <span id="selected-seats">0</span></p>
+        <p>Total Price: $<span id="order-total">0.00</span></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const orderBtn = document.getElementById("order-btn");
+        const modal = document.getElementById("order-modal");
+        const closeModal = document.getElementsByClassName("modal-close")[0];
+        const movieTitle = document.getElementById("movie-title");
+        const selectedSeats = document.getElementById("selected-seats");
+        const orderTotal = document.getElementById("order-total");
+
+        orderBtn.addEventListener('click', () => {
+            const moviePrice = @Model.Movie.PricePerTicket;
+            const selectedSeatCount = parseInt(document.getElementById('count').textContent);
+            const totalPrice = moviePrice * selectedSeatCount;
+
+            movieTitle.textContent = "@Model.Movie.Title";
+            selectedSeats.textContent = selectedSeatCount;
+            orderTotal.textContent = "$" + totalPrice.toFixed(2);
+            modal.style.display = 'block';
+        });
+
+
+        closeModal.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+</script>
+

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MovieHunter.Models.Movies>
+﻿
+@model IEnumerable<MovieHunter.Models.Movies>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,7 +16,7 @@
         {
             <div class="box">
                 <div class="box-img">
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@item.MovieId" asp-route-title="@item.Title.Replace(" ","-")">
+                    <a asp-controller="MovieApi" asp-action="Details" asp-route-id="@item.MovieId">
                     <img src="@item.PictureUrl"/>
                     </a>
                 </div>
@@ -33,7 +34,7 @@
         {
             <div class="box">
                 <div class="box-img">
-                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@item.MovieId" asp-route-title="@item.Title.Replace(" ","-")">
+                    <a asp-controller="MovieApi" asp-action="Details" asp-route-id="@item.MovieId">
                         <img src="@item.PictureUrl" />
                     </a>
                 </div>

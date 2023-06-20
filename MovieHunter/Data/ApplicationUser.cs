@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieHunter.Data
 {
-
     public class ApplicationUser : IdentityUser
     {
-
         [Required]
         [Display(Name = "First Name")]
         [PersonalData]
@@ -17,7 +15,6 @@ namespace MovieHunter.Data
         [Required]
         [Display(Name = "Last Name")]
         [PersonalData]
-
         public string LastName { get; set; }
 
         [Phone]
@@ -26,6 +23,5 @@ namespace MovieHunter.Data
 
         [InverseProperty(nameof(Reservation.Customer))]
         public virtual ICollection<Reservation>? Reservations { get; set; }
-
     }
 }

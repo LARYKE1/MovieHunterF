@@ -1,0 +1,47 @@
+﻿@model MovieHunter.Models.Movies
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    body{
+        background:black;
+    }
+</style>
+
+<div class="container">
+    <div class="details-container">
+        <div class="details-grid" id="details-grid">
+            <div class="movie-poster">
+                <img src="@Model.PictureUrl" alt="movie poster"/>
+            </div>
+            
+            <div class="movie-info">
+           
+                <h3 class="movie-title">@Model.Title</h3>
+                <ul class="movie-misc-info">
+                    <li class="year">Release Year: @Html.DisplayFor(modelItem=>Model.ReleaseDate)</li>
+                    @*<li class="rated">Number of reservations: @TempData["count"]</li>*@
+                    
+                </ul>
+                @if (Model.Duration > 500)
+                {
+                    <p>Duration: N/A min</p>
+                }else{
+                    <p>Duration: @Model.Duration min</p>
+                }
+               
+                <p>Genre: @Model.Genre</p>
+                <p class="marginb">@Model.Description</p>
+                @if (User.Identity.IsAuthenticated && Model.ReleaseDate < new DateTime(2023, 4, 30))
+                {
+                    <a class="button-88" asp-controller="Reservations" asp-action="Create" asp-route-id="@Model.MovieId">Reserve</a>
+                }
+            </div>
+           
+            
+        </div>
+    </div>
+</div>
+

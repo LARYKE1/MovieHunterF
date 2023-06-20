@@ -1,6 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieHunter.Data;
+using MovieHunter.Models;
+
+
+
+
+
+//THIS IS THE ORIGINAL MOVIE CONTROLLER THAT HAS A DIRECT CONNECTION WITH DATABASE
+//BUT NOW I AM TRYING TO USE THE API TO FETCH THE DATA
+
+
+
+
 
 namespace MovieHunter.Controllers
 {
@@ -45,7 +57,6 @@ namespace MovieHunter.Controllers
                 return NotFound();
             }
         }
-
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)

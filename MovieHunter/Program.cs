@@ -20,8 +20,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
-
-
+builder.Services.AddHttpClient();
+builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();
 builder.Services.AddDistributedMemoryCache();
@@ -58,42 +58,17 @@ app.UseStaticFiles();
 
 app.UseSession();
 
-
-
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.MapControllers();
-
-
-
-
-app.MapControllerRoute(
-    name: "Reservation",
-    pattern: "MyReservation",
-    defaults: new {controller="Reservations", action="Index"}
-    );
-
-//app.MapControllerRoute(
-//    name: "ReservationCreate",
-//    pattern: "MakeAReservationToday",
-//    defaults: new { controller = "Reservations", action = "Create" }); 
-
-app.MapControllerRoute(
-        name: "Movie",
-        pattern: "{title}",
-        defaults: new { controller = "Movies", action = "Details" });
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Movies}/{action=Index}/{id?}"
-    
+    pattern: "{controller=MovieApi}/{action=Index}/{id?}"
+
 );
-
-
-
-
 
 app.MapRazorPages();
 

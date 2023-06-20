@@ -9,16 +9,15 @@ namespace MovieHunter.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
         }
 
         public virtual DbSet<Movies> Movies { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<AvailableDate> AvailableDate { get; set; }
+        public virtual DbSet<Seats> Seats { get; set; }
 
-        protected override void OnModelCreating (ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-           
             base.OnModelCreating(builder);
 
             builder.Entity<Movies>()
@@ -31,8 +30,6 @@ namespace MovieHunter.Data
                 .HasMany(a => a.AvailableDate)
                 .WithOne(r => r.Movie)
                 .HasForeignKey(f => f.MovieId);
-
-
         }
     }
 }
